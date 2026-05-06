@@ -1,0 +1,44 @@
+[package]
+name = "todolist-101"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+axum = { version = "0.8", optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
+leptos = { version = "0.8" }
+leptos_axum = { version = "0.8", optional = true }
+leptos_router = { version = "0.8" }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"], optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+
+[features]
+default = []
+hydrate = [
+    "dep:console_error_panic_hook",
+    "dep:wasm-bindgen",
+    "leptos/hydrate",
+]
+ssr = [
+    "dep:axum",
+    "dep:leptos_axum",
+    "dep:tokio",
+    "leptos/ssr",
+    "leptos_router/ssr",
+]
+
+[package.metadata.leptos]
+output-name = "todolist-101"
+site-root = "target/site"
+site-pkg-dir = "pkg"
+site-addr = "0.0.0.0:8080"
+reload-port = 3001
+env = "DEV"
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+
