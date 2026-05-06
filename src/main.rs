@@ -7,11 +7,18 @@ async fn main() -> Result<(), Box<dyn Error>> {
     use axum::Router;
     use dotenvy::dotenv;
     use leptos::config::get_configuration;
-    use leptos::logging::log;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use todolist_101::{shell, App};
+    use tracing::info;
+    use tracing_subscriber::{fmt, EnvFilter};
 
     let _ = dotenv();
+    fmt()
+        .with_env_filter(
+            EnvFilter::try_from_default_env()
+                .or_else(|_| EnvFilter::try_new("info"))?,
+        )
+        .init();
 
     let conf = get_configuration(None)?;
     let leptos_options = conf.leptos_options;
@@ -26,7 +33,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
 
-    log!("listening on http://{}", addr);
+    info!("listening on http://{addr}");
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
     axum::serve(listener, app.into_make_service()).await?;
