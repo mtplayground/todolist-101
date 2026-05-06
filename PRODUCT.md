@@ -4,27 +4,30 @@
 
 # Current State
 
-The project is initialized as a Cargo workspace with a Leptos library crate and a binary entry point. It builds successfully in both server-side (`ssr`) and client hydration (`hydrate`) modes.
+The project now has a working Leptos SSR bootstrap with an Axum server entry point and a browser hydration entry point. It builds successfully in both server-side (`ssr`) and client hydration (`hydrate`) modes.
 
 Today it only provides a placeholder UI:
-- A minimal `<App />` component that renders the project name
-- A stub `main` entry point behind the `ssr` feature
-- A hydration entry point behind the `hydrate` feature
+- A placeholder `<App />` page for the future TodoMVC application
+- An HTML shell for SSR responses
+- An Axum server that loads `LeptosOptions`, generates Leptos routes, and serves the app
+- A hydration entry point that mounts the app in the browser
 
-There is no running HTTP server, router setup, database integration, Todo domain model, or TodoMVC behavior yet.
+There is still no Todo domain model, persistence layer, styling, or TodoMVC behavior yet. The current app is infrastructure plus a placeholder page.
 
 # Key Decisions
 
 - Rendering model: Leptos with an explicit split between `ssr` and `hydrate` feature flags
 - Server stack: Axum and Tokio are included as SSR-only dependencies
-- Client entry: WebAssembly hydration is prepared with `wasm-bindgen` and `console_error_panic_hook`
+- Server bootstrap: the binary crate owns Axum startup, Leptos route generation, and fallback handling
+- Client entry: WebAssembly hydration is implemented with `wasm-bindgen`, `console_error_panic_hook`, and `hydrate_body`
 - Build contract: Leptos metadata is configured for `cargo-leptos` style builds, with output rooted at `target/site`
 - Network convention: the intended server bind address is `0.0.0.0:8080`
 
 # Conventions
 
 - The library crate is the source of shared UI code
-- The binary crate is reserved for server startup code
+- The binary crate owns server startup and HTTP wiring
+- The library crate owns the app view and SSR shell
 - Browser-only behavior must stay behind `hydrate`
 - Server-only behavior must stay behind `ssr`
 - Documentation in this file should describe only what is merged on `main`
