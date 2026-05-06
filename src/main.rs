@@ -5,10 +5,13 @@ use std::error::Error;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     use axum::Router;
+    use dotenvy::dotenv;
     use leptos::config::get_configuration;
     use leptos::logging::log;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use todolist_101::{shell, App};
+
+    let _ = dotenv();
 
     let conf = get_configuration(None)?;
     let leptos_options = conf.leptos_options;
