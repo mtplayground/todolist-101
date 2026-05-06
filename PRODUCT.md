@@ -12,6 +12,7 @@ Today it only provides a placeholder UI:
 - An Axum server that loads `LeptosOptions`, generates Leptos routes, and serves the app
 - A hydration entry point that mounts the app in the browser
 - Environment-based startup configuration loaded from `.env` when present
+- Tracing-based startup logging with environment-controlled filtering
 
 There is still no Todo domain model, persistence layer, styling, or TodoMVC behavior yet. The current app is infrastructure plus a placeholder page.
 
@@ -20,6 +21,7 @@ There is still no Todo domain model, persistence layer, styling, or TodoMVC beha
 - Rendering model: Leptos with an explicit split between `ssr` and `hydrate` feature flags
 - Server stack: Axum and Tokio are included as SSR-only dependencies
 - Configuration model: SSR startup loads environment variables with `dotenvy`
+- Logging model: SSR startup uses `tracing` with `tracing-subscriber` and `EnvFilter`
 - Server bootstrap: the binary crate owns Axum startup, Leptos route generation, and fallback handling
 - Client entry: WebAssembly hydration is implemented with `wasm-bindgen`, `console_error_panic_hook`, and `hydrate_body`
 - Build contract: Leptos metadata is configured for `cargo-leptos` style builds, with output rooted at `target/site`
